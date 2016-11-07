@@ -17,6 +17,7 @@ app = Flask(__name__)
 
 @app.route('/accessToken')
 def token():
+  from_client   = request.values.get('From')
   account_sid = os.environ.get("ACCOUNT_SID", ACCOUNT_SID)
   api_key = os.environ.get("API_KEY", API_KEY)
   api_key_secret = os.environ.get("API_KEY_SECRET", API_KEY_SECRET)
@@ -28,7 +29,7 @@ def token():
     outgoing_application_sid=app_sid
   )
 
-  token = AccessToken(account_sid, api_key, api_key_secret, IDENTITY)
+  token = AccessToken(account_sid, api_key, api_key_secret, from_client)
   token.add_grant(grant)
 
   return str(token)
@@ -50,9 +51,12 @@ def placeCall():
   account_sid = os.environ.get("ACCOUNT_SID", ACCOUNT_SID)
   api_key = os.environ.get("API_KEY", API_KEY)
   api_key_secret = os.environ.get("API_KEY_SECRET", API_KEY_SECRET)
+  
+  from_client   = request.values.get('From')
+  to_client     = request.values.get('To')
 
   client = Client(api_key, api_key_secret, account_sid)
-  call = client.calls.create(url=request.url_root + 'incoming', to='client:' + IDENTITY, from_='client:' + CALLER_ID)
+  call = client.calls.create(url=request.url_root + 'incoming', to='client:' + to_client, from_='client:' + from_client)
   return str(call.sid)
 
 @app.route('/', methods=['GET', 'POST'])
