@@ -57,7 +57,7 @@ def placeCall():
 
   client = Client(api_key, api_key_secret, account_sid)
   call = client.calls.create(url=request.url_root + 'incoming', to='client:' + to_client, from_='client:' + from_client)
-  return str(call.sid)
+  return from_client
 
 @app.route('/', methods=['GET', 'POST'])
 def welcome():
