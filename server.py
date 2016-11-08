@@ -15,6 +15,8 @@ CALLER_ID = 'quick_start'
 
 app = Flask(__name__)
 
+phone_pattern = re.compile(r"^[\d\+\-\(\) ]+$")
+
 @app.route('/accessToken')
 def token():
   from_client   = request.values.get('From')
@@ -45,6 +47,24 @@ def incoming():
   resp = twilio.twiml.Response()
   resp.say("Congratulations! You have received your first inbound call! Good bye.")
   return str(resp)
+
+@app.route("/voice", methods=['POST'])
+def voice():
+    resp = twilio.twiml.Response()
+    from_client   = request.values.get('From')
+    to_client     = request.values.get('To')
+    if "To" in request.form and request.form["To"] != '':
+        dial = resp.dial(from_client)
+        # wrap the phone number or client name in the appropriate TwiML verb
+        # by checking if the number given has only digits and format symbols
+        if phone_pattern.match(to_client):
+            dial.number(to_client)
+        else:
+            dial.client(to_client)
+    else:
+        resp.say("Thanks for calling!")
+    
+    return Response(str(resp), mimetype='text/xml')
 
 @app.route('/placeCall', methods=['GET', 'POST'])
 def placeCall():
