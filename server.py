@@ -1,4 +1,4 @@
-import os
+import os, re;
 from flask import Flask, request
 from twilio.jwt.access_token import AccessToken, VoiceGrant
 from twilio.rest import Client
@@ -53,7 +53,7 @@ def voice():
     resp = twilio.twiml.Response()
     from_client   = request.values.get('From')
     to_client     = request.values.get('To')
-    if "To" in request.form and request.form["To"] != '':
+    if to_client != '':
         dial = resp.dial(from_client)
         # wrap the phone number or client name in the appropriate TwiML verb
         # by checking if the number given has only digits and format symbols
