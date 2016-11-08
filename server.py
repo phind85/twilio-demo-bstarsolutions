@@ -45,7 +45,7 @@ def outgoing():
 @app.route('/incoming', methods=['GET', 'POST'])
 def incoming():
   resp = twilio.twiml.Response()
-  resp.say("in! in! in! in! in! in! in! in! in! in! in! in! in! in! in! in! in! in! in! ")
+  resp.dial("anhphideptrai2")
   return str(resp)
 
 @app.route('/placeCall', methods=['GET', 'POST'])
