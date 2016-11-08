@@ -39,13 +39,13 @@ def token():
 @app.route('/outgoing', methods=['GET', 'POST'])
 def outgoing():
   resp = twilio.twiml.Response()
-  resp.say("Congratulations! You have made your first oubound call! Good bye.")
+  resp.say("hello! hello! hello! hello! hello! hello! hello! hello! hello! hello! ")
   return str(resp)
 
 @app.route('/incoming', methods=['GET', 'POST'])
 def incoming():
   resp = twilio.twiml.Response()
-  resp.say("Congratulations! You have received your first inbound call! Good bye.")
+  resp.say("hello! hello! hello! hello! hello! hello! hello! hello! hello! hello! ")
   return str(resp)
 
 @app.route("/voice", methods=['POST'])
