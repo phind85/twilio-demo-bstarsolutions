@@ -38,15 +38,45 @@ def token():
 
 @app.route('/outgoing', methods=['GET', 'POST'])
 def outgoing():
-  resp = twilio.twiml.Response()
-  resp.say("out! out! out! out! out! out! out! out! out! out! out! out! out! out! out! ")
-  return str(resp)
+    resp = twilio.twiml.Response()
+    from_value = request.values.get('From')
+    to = request.values.get('To')
+    if not (from_value and to):
+        resp.say("Invalid request")
+        return str(resp)
+    from_client = from_value.startswith('client')
+    caller_id = os.environ.get("CALLER_ID", CALLER_ID)
+    if not from_client:
+        # PSTN -> client
+        resp.dial(callerId=from_value).client(CLIENT)
+    elif to.startswith("client:"):
+        # client -> client
+        resp.dial(callerId=from_value).client(to[7:])
+    else:
+        # client -> PSTN
+        resp.dial(to, callerId=caller_id)
+    return str(resp)
 
 @app.route('/incoming', methods=['GET', 'POST'])
 def incoming():
-  resp = twilio.twiml.Response()
-  resp.dial("anhphideptrai2")
-  return str(resp)
+    resp = twilio.twiml.Response()
+    from_value = request.values.get('From')
+    to = request.values.get('To')
+    if not (from_value and to):
+        resp.say("Invalid request")
+        return str(resp)
+    from_client = from_value.startswith('client')
+    caller_id = os.environ.get("CALLER_ID", CALLER_ID)
+    if not from_client:
+        # PSTN -> client
+        resp.dial(callerId=from_value).client(CLIENT)
+    elif to.startswith("client:"):
+        # client -> client
+        resp.dial(callerId=from_value).client(to[7:])
+    else:
+        # client -> PSTN
+        resp.dial(to, callerId=caller_id)
+    return str(resp)
 
 @app.route('/placeCall', methods=['GET', 'POST'])
 def placeCall():
